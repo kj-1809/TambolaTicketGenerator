@@ -2,7 +2,7 @@ import Ticket from "./components/Ticket";
 import "./App.css";
 import Page from "./components/Page";
 const App = () => {
-  const n = 500;
+  const n = 1;
   const startPage = 1;
   let arr = []
   
@@ -13,7 +13,7 @@ const App = () => {
   return (
     <div className="container">
       {arr.map((pgNumber) => {
-        return <Page pageNumber = {pgNumber}/>
+        return <Page pageNumber = {pgNumber} key = {pgNumber}/>
       })}
     </div>
   )
