@@ -5,10 +5,11 @@
   flex-direction: column;
   /* background-color: aqua; */
   width: 210mm;
-  height: 297mm;
+  height: 287mm;
+  padding-top: 10mm;
 }
 .pageNumber {
-  margin-top: 50px;
+  margin-top: 20px;
 }
 /* @media print {
   .pageStyle {

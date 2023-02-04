@@ -2,11 +2,12 @@ import Ticket from "./components/Ticket";
 import "./App.css";
 import Page from "./components/Page";
 const App = () => {
-  const n = 100;
+  const n = 500;
+  const startPage = 1;
   let arr = []
   
   for(let i = 1 ; i <= n ; ++i){
-    arr.push(i)
+    arr.push(i+startPage-1)
   }
 
   return (

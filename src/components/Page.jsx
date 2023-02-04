@@ -10,7 +10,7 @@ function Page(props){
       <Ticket ticketCode = {props.pageNumber*6 - 2}/>
       <Ticket ticketCode = {props.pageNumber*6 - 1}/>
       <Ticket ticketCode = {props.pageNumber*6 - 0}/>
-      <h3 className = "pageNumber">Page {props.pageNumber ? props.pageNumber : 1}</h3>
+      <h3 className = "pageNumber">Sheet #{props.pageNumber ? props.pageNumber : 1}</h3>
     </div>
   )
 }
