@@ -9,14 +9,15 @@ function Page(props) {
 		// gives result in [low , high)
 		let value = -1;
 		while (value == -1) {
-			// console.log("while")
 			const cur = Math.floor(Math.random() * (high - low) + low);
 			let fine = true;
-			exceptions.forEach((element) => {
-				if (cur === element) {
-					fine = false;
-				}
-			});
+			if(exceptions){
+				exceptions.forEach((element) => {
+					if (cur === element) {
+						fine = false;
+					}
+				});
+			}
 
 			if (fine) {
 				value = cur;
@@ -27,104 +28,76 @@ function Page(props) {
 	};
 
 	const randomNumberGenerator = () => {
-		const total = [9, 10, 10, 10, 10, 10, 10, 10, 11];
+		const mxNumsCol = [9, 10, 10, 10, 10, 10, 10, 10, 11];
 		let pos = [];
-		const current = [0, 0, 0, 0, 0, 0, 0, 0, 0]
-		const left = [9, 10, 10, 10, 10, 10, 10, 10, 11];
-
-
-		const tempPos = [
-			[0,1,0,1,1,0,1,0,1],
-			[1,0,1,0,1,1,0,1,0],
-			[1,0,1,0,1,0,1,0,1],
-			[1,0,1,0,1,1,0,1,0],
-			[0,1,0,1,0,1,1,0,1],
-			[0,1,0,1,1,0,1,0,1],
-			[0,1,0,1,0,1,1,1,0],
-			[1,0,1,0,1,1,0,1,0],
-			[1,0,1,0,1,0,1,0,1],
-			[1,1,0,1,0,1,0,1,0],
-			[0,1,0,1,0,1,0,1,1],
-			[1,0,1,0,1,0,1,0,1],
-			[0,1,0,1,0,1,0,1,1],
-			[1,0,1,1,0,0,1,1,0],
-			[0,1,1,0,1,0,1,0,1],
-			[0,1,0,1,0,1,0,1,1],
-			[0,1,1,1,0,1,0,1,0],
-			[1,0,1,0,1,0,1,0,1]
-		]
-
-
-
+		const left = Array(18).fill(5)
 		// generate position where numbers will be placed
-		for (let i = 0; i < 18; ++i) {
-			const forbiddenColumns = [];
-			const mandatoryColumns = [];
-			pos[i] = [0, 0, 0, 0, 0, 0, 0, 0, 0];
 
-			for(let j = 0 ; j < 9 ; ++j){
-				
-				if(j === 0){
-					if(left[j] >= Math.ceil((18 - i) * 0.5)){
-						mandatoryColumns.push([left[j] , j])
-					}	
-					if(current[j] >= 9){
-						forbiddenColumns.push(j)
+		for(let x = 0 ; x < 18 ; ++x){
+			pos[x] = []
+			for(let y = 0 ; y < 9 ; ++y){
+				pos[x][y] = 0;
+			}
+		}
+
+		for(let j = 0 ; j < 9 ; ++j){
+			
+			const forbiddenRows = []
+			const mandatoryRows = []
+
+			let startCol = getRandom(0 , 18);
+
+			for(let times = 0 ; times < 3 ; ++times){
+				let curStart = startCol + times;
+				for(let i = 0 ; i < 6 ; i+=3){
+					let curIndex = (curStart + i) % 18;
+					if(left[curIndex] > Number((9-j) * Number(5/9))){
+						mandatoryRows.push([left[curIndex] , curIndex])
 					}
-				}else if(j === 8){
-					if(left[j] >= Math.ceil((18 - i) * 0.5)){
-						mandatoryColumns.push([left[j] , j])
-					}
-					if(current[j] >= 11){
-						forbiddenColumns.push(j)
-					}
-				}else{
-					if(left[j] >= Math.ceil((18 - i) * 0.5)){
-						mandatoryColumns.push([left[j] , j])
-					}
-					if(current[j] >= 10){
-						forbiddenColumns.push(j)
+					if(left[curIndex] === 0){
+						forbiddenRows.push(curIndex)
 					}
 				}
-			}
-			
-			mandatoryColumns.sort((a,b) => {
+			}	
+
+			mandatoryRows.sort((a,b) => {
 				return b[0] - a[0]
 			})
-			
 
-			let timesRan = 0;
+			let executed = 0;
+			let alreadySelected = []
 
-			for(let j = 0 ; j < mandatoryColumns.length && timesRan < 5 ; ++j){
-				if(current[mandatoryColumns[j][1]] === total[mandatoryColumns[j][1]]){
-					continue;
-				}
-				++timesRan;
-				pos[i][mandatoryColumns[j][1]] = 1;
-				current[mandatoryColumns[j][1]]++;
-				left[mandatoryColumns[j][1]]--;
+			for(let i = 0 ; i < mandatoryRows.length && executed < mxNumsCol[j]; ++i){
+				executed++;
+				alreadySelected.push(mandatoryRows[i][1]);
+				left[mandatoryRows[i][1]]--;
+				pos[mandatoryRows[i][1]][j] = 1
 			}
 
-			const pickedColumns = [...forbiddenColumns , ...mandatoryColumns]
-
-			for (let k = 0; k < 5 - timesRan ; ++k) {
-				const pickedColumn = getRandom(0, 9, pickedColumns);
-				pos[i][pickedColumn] = 1;
-				current[pickedColumn]++;
-				left[pickedColumn]--;
-				pickedColumns.push(pickedColumn);
+			const pickedRows = [...forbiddenRows , ...alreadySelected]
+			for(let times = 0 ; times < (mxNumsCol[j] - executed) ; ++times){
+				const pickedRow = getRandom(0,18,pickedRows)
+				if(pickedRow === -1){
+					continue;
+				}
+				if(pickedRow != -1 && left[pickedRow] === 0){
+					executed--;
+					pickedRows.push(pickedRow)
+					continue;
+				}
+				pos[pickedRow][j] = 1;
+				left[pickedRow]--;
+				pickedRows.push(pickedRow)
 			}
 		}
 
 		console.log(pos)
-		// console.log(current)
 
-		//delete (just for testing)
 		const rowSum = [];
 		for(let x = 0 ; x < 18 ; ++x){
 			let cnt= 0;
 			for(let y = 0 ; y < 9 ; ++y){
-				if(tempPos[x][y] === 1){
+				if(pos[x][y] === 1){
 					cnt++;
 				}
 			}
@@ -135,62 +108,58 @@ function Page(props) {
 		for(let x = 0 ; x < 9 ; ++x){
 			let cnt = 0;
 			for(let y = 0 ; y < 18 ; ++y){
-				if(tempPos[y][x] === 1){
+				if(pos[y][x] === 1){
 					cnt++;
 				}
 			}
 			columnSum[x] = cnt;
 		}
 
-
+		console.log(left)
 		console.log(rowSum)
 		console.log(columnSum)
 
-		const ticketNumbers = [];
-		pos = tempPos;
+		// const ticketNumbers = [];
 
 		// pick the numbers
-		for (let i = 0; i < 9; ++i) {
-			let low = 10 * i;
-			let high = 10 * i + 9;
-			if (i === 0) {
-				low++;
-			}
-			if (i === 8) {
-				high++;
-			}
-			let times = total[i];
-			let pickedNumbers = [];
-			for (let k = 0; k < times; ++k) {
-				pickedNumbers.push(getRandom(low, high + 1, pickedNumbers));
-			}
-			ticketNumbers.push(pickedNumbers);
-		}
+		// for (let i = 0; i < 9; ++i) {
+		// 	let low = 10 * i;
+		// 	let high = 10 * i + 9;
+		// 	if (i === 0) {
+		// 		low++;
+		// 	}
+		// 	if (i === 8) {
+		// 		high++;
+		// 	}
+		// 	let times = total[i];
+		// 	let pickedNumbers = [];
+		// 	for (let k = 0; k < times; ++k) {
+		// 		pickedNumbers.push(getRandom(low, high + 1, pickedNumbers));
+		// 	}
+		// 	ticketNumbers.push(pickedNumbers);
+		// }
 
-		console.log("Picked Numbers : ")
-		console.log(ticketNumbers)
+		// // place numbers at the respective positions
+		// for (let j = 0; j < 9; ++j) {
+		// 	let elements = ticketNumbers[j];
+		// 	let curPos = 0;
+		// 	for (let row = 0; row < 18; ++row) {
+		// 		if (pos[row][j] === 1) {
+		// 			pos[row][j] = elements[curPos];
+		// 			curPos += 1;
+		// 		}
+		// 	}
+		// }
 
-		// place numbers at the respective positions
-		for (let j = 0; j < 9; ++j) {
-			let elements = ticketNumbers[j];
-			let curPos = 0;
-			for (let row = 0; row < 18; ++row) {
-				if (pos[row][j] === 1) {
-					pos[row][j] = elements[curPos];
-					curPos += 1;
-				}
-			}
-		}
-
-		const newPos = [];
-		let currentPos = 0;
-		for (let i = 0; i < 18; ++i) {
-			for (let j = 0; j < 9; ++j) {
-				newPos[currentPos] = pos[i][j];
-				currentPos++;
-			}
-		}
-		setFlatListOfNumbers(newPos);
+		// const newPos = [];
+		// let currentPos = 0;
+		// for (let i = 0; i < 18; ++i) {
+		// 	for (let j = 0; j < 9; ++j) {
+		// 		newPos[currentPos] = pos[i][j];
+		// 		currentPos++;
+		// 	}
+		// }
+		// setFlatListOfNumbers(newPos);
 	};
 
 	useEffect(() => {
