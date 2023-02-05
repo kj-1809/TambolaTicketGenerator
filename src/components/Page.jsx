@@ -116,7 +116,7 @@ function Page(props) {
 			}
 		}
 
-		console.log(pos)
+		// console.log(pos)
 		// console.log(current)
 
 		//delete (just for testing)
@@ -143,8 +143,8 @@ function Page(props) {
 		}
 
 
-		console.log(rowSum)
-		console.log(columnSum)
+		// console.log(rowSum)
+		// console.log(columnSum)
 
 		const ticketNumbers = [];
 		pos = tempPos;
@@ -167,8 +167,8 @@ function Page(props) {
 			ticketNumbers.push(pickedNumbers);
 		}
 
-		console.log("Picked Numbers : ")
-		console.log(ticketNumbers)
+		// console.log("Picked Numbers : ")
+		// console.log(ticketNumbers)
 
 		// place numbers at the respective positions
 		for (let j = 0; j < 9; ++j) {
