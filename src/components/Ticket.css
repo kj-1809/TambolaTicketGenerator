@@ -1,12 +1,15 @@
+@import url('https://fonts.googleapis.com/css2?family=Bangers&display=swap');
 .ticketContainer {
   display: flex;
   align-items: center;
   flex-direction: column;
   height : 150px;
   width : 400px;
-  border: 2px solid rgb(255, 0, 98);
+  /* border: 2px solid rgb(255, 0, 98);*/
+  border: 2px solid black;
   border-radius: 10px;
   margin-top: 15px;
+  background-color: grey;
 }
 .headingContainer  {
   display: flex;
@@ -14,18 +17,21 @@
 
 }
 .ticketHeading {
-  font-size: 15px;
+  font-family: 'Bangers', cursive;
+  font-size: 25px;
   margin : 0;
   padding : 4px 0px;
 }
 .ticketCode {
+  font-family: 'Bangers', cursive;
   padding : 4px 0px;
-  font-size: 15px;
-  margin : 0px 0px 0px 20px;
+  font-size: 25px;
+  margin : 0px 0px 0px 30px;
 }
 
 hr {
-  border: 1px solid rgb(0, 181, 248);
+  /* border: 1px solid rgb(0, 181, 248); */
+  border: 1px solid black;
   width : 100%;
   margin : 0px;
 }
@@ -50,6 +56,9 @@ hr {
   /* width : 40px; */
   height: 100%;
   width: 38px;
-  border : 1.5px solid rgb(0, 181, 248);
+  /* border : 1.5px solid rgb(0, 181, 248); */
+  border: 1px solid black;
+
   font-size: 20px;
+  /* background-color: rgb(181, 181, 181); */
 }

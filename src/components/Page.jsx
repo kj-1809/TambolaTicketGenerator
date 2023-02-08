@@ -8,16 +8,16 @@ function Page(props) {
 	const getRandom = (low, high, exceptions) => {
 		// gives result in [low , high)
 		let value = -1;
-		while (value == -1) {
-			// console.log("while")
+		while (value === -1) {
 			const cur = Math.floor(Math.random() * (high - low) + low);
 			let fine = true;
-			exceptions.forEach((element) => {
-				if (cur === element) {
-					fine = false;
-				}
-			});
-
+			if(exceptions.length !== 0){
+				exceptions.forEach((element) => {
+					if (cur === element) {
+						fine = false;
+					}
+				});
+			}
 			if (fine) {
 				value = cur;
 				break;
@@ -28,147 +28,28 @@ function Page(props) {
 
 	const randomNumberGenerator = () => {
 		const total = [9, 10, 10, 10, 10, 10, 10, 10, 11];
-		let pos = [];
-		const current = [0, 0, 0, 0, 0, 0, 0, 0, 0]
-		const left = [9, 10, 10, 10, 10, 10, 10, 10, 11];
-
-
-		const tempPos = [
-			[0,1,0,1,1,0,1,0,1],
-			[1,0,1,0,1,1,0,1,0],
-			[1,0,1,0,1,0,1,0,1],
-			[1,0,1,0,1,1,0,1,0],
-			[0,1,0,1,0,1,1,0,1],
-			[0,1,0,1,1,0,1,0,1],
-			[0,1,0,1,0,1,1,1,0],
-			[1,0,1,0,1,1,0,1,0],
-			[1,0,1,0,1,0,1,0,1],
-			[1,1,0,1,0,1,0,1,0],
-			[0,1,0,1,0,1,0,1,1],
-			[1,0,1,0,1,0,1,0,1],
-			[0,1,0,1,0,1,0,1,1],
-			[1,0,1,1,0,0,1,1,0],
-			[0,1,1,0,1,0,1,0,1],
-			[0,1,0,1,0,1,0,1,1],
-			[0,1,1,1,0,1,0,1,0],
-			[1,0,1,0,1,0,1,0,1]
-		]
-
-
-
-		// generate position where numbers will be placed
-		for (let i = 0; i < 18; ++i) {
-			const forbiddenColumns = [];
-			const mandatoryColumns = [];
-			pos[i] = [0, 0, 0, 0, 0, 0, 0, 0, 0];
-
-			for(let j = 0 ; j < 9 ; ++j){
-				
-				if(j === 0){
-					if(left[j] >= Math.ceil((18 - i) * 0.5)){
-						mandatoryColumns.push([left[j] , j])
-					}	
-					if(current[j] >= 9){
-						forbiddenColumns.push(j)
-					}
-				}else if(j === 8){
-					if(left[j] >= Math.ceil((18 - i) * 0.5)){
-						mandatoryColumns.push([left[j] , j])
-					}
-					if(current[j] >= 11){
-						forbiddenColumns.push(j)
-					}
-				}else{
-					if(left[j] >= Math.ceil((18 - i) * 0.5)){
-						mandatoryColumns.push([left[j] , j])
-					}
-					if(current[j] >= 10){
-						forbiddenColumns.push(j)
-					}
-				}
-			}
-			
-			mandatoryColumns.sort((a,b) => {
-				return b[0] - a[0]
-			})
-			
-
-			let timesRan = 0;
-
-			for(let j = 0 ; j < mandatoryColumns.length && timesRan < 5 ; ++j){
-				if(current[mandatoryColumns[j][1]] === total[mandatoryColumns[j][1]]){
-					continue;
-				}
-				++timesRan;
-				pos[i][mandatoryColumns[j][1]] = 1;
-				current[mandatoryColumns[j][1]]++;
-				left[mandatoryColumns[j][1]]--;
-			}
-
-			const pickedColumns = [...forbiddenColumns , ...mandatoryColumns]
-
-			for (let k = 0; k < 5 - timesRan ; ++k) {
-				const pickedColumn = getRandom(0, 9, pickedColumns);
-				pos[i][pickedColumn] = 1;
-				current[pickedColumn]++;
-				left[pickedColumn]--;
-				pickedColumns.push(pickedColumn);
-			}
-		}
-
-		// console.log(pos)
-		// console.log(current)
-
-		//delete (just for testing)
-		const rowSum = [];
-		for(let x = 0 ; x < 18 ; ++x){
-			let cnt= 0;
-			for(let y = 0 ; y < 9 ; ++y){
-				if(tempPos[x][y] === 1){
-					cnt++;
-				}
-			}
-			rowSum[x] = cnt;
-		}
-		const columnSum = []
-
-		for(let x = 0 ; x < 9 ; ++x){
-			let cnt = 0;
-			for(let y = 0 ; y < 18 ; ++y){
-				if(tempPos[y][x] === 1){
-					cnt++;
-				}
-			}
-			columnSum[x] = cnt;
-		}
-
-
-		// console.log(rowSum)
-		// console.log(columnSum)
-
 		const ticketNumbers = [];
-		pos = tempPos;
+		const pos = JSON.parse(JSON.stringify(props.structure));
 
 		// pick the numbers
-		for (let i = 0; i < 9; ++i) {
-			let low = 10 * i;
-			let high = 10 * i + 9;
-			if (i === 0) {
+		for (let j = 0; j < 9; ++j) {
+			let low = 10 * j;
+			let high = 10 * j + 9;
+			if (j === 0) {
 				low++;
 			}
-			if (i === 8) {
+			if (j === 8) {
 				high++;
 			}
-			let times = total[i];
+			let times = total[j];
 			let pickedNumbers = [];
 			for (let k = 0; k < times; ++k) {
-				pickedNumbers.push(getRandom(low, high + 1, pickedNumbers));
+				const pickedNumber = getRandom(low, high + 1, pickedNumbers)
+				pickedNumbers.push(pickedNumber);
 			}
 			ticketNumbers.push(pickedNumbers);
 		}
-
-		// console.log("Picked Numbers : ")
-		// console.log(ticketNumbers)
+		console.log(ticketNumbers)
 
 		// place numbers at the respective positions
 		for (let j = 0; j < 9; ++j) {
@@ -177,25 +58,28 @@ function Page(props) {
 			for (let row = 0; row < 18; ++row) {
 				if (pos[row][j] === 1) {
 					pos[row][j] = elements[curPos];
-					curPos += 1;
+					++curPos;
 				}
 			}
 		}
+		console.log(pos)
 
-		const newPos = [];
-		let currentPos = 0;
+		// make the list flat
+		const flatPos = [];
+		let curPos = 0;
 		for (let i = 0; i < 18; ++i) {
 			for (let j = 0; j < 9; ++j) {
-				newPos[currentPos] = pos[i][j];
-				currentPos++;
+				flatPos[curPos] = pos[i][j];
+				curPos++;
 			}
 		}
-		setFlatListOfNumbers(newPos);
+
+		setFlatListOfNumbers(flatPos);
 	};
 
 	useEffect(() => {
 		randomNumberGenerator();
-	}, []);
+	}, [props.structure]);
 
 	return (
 		<div className="pageStyle">
