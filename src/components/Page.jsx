@@ -73,7 +73,7 @@ function Page(props) {
 		// 3 passes for adding elements in columns
 		for (let times = 0; times < 4; ++times) {
 			let factor = 2;
-			if(times === 3){
+			if (times === 3) {
 				factor = 3;
 			}
 			for (let j = 0; j < 9; ++j) {
@@ -97,24 +97,30 @@ function Page(props) {
 
 		for (let setIndex = 0; setIndex < 6; ++setIndex) {
 			//first row
+
 			let curRow = setIndex * 3;
 			for (let size = 3; size > 0; --size) {
 				if (getRowCount(curRow) === 5) {
 					break;
 				}
+				const cols = [0, 1, 2, 3, 4, 5, 6, 7, 8];
 				for (let j = 0; j < 9; ++j) {
+					let randomIndex = getRandom(0, cols.length);
+					let randomCol = cols[randomIndex];
+					cols.splice(randomIndex, 1);
+
 					if (getRowCount(curRow) === 5) {
 						break;
 					}
-					if (pos[curRow][j] != 0) {
+					if (pos[curRow][randomCol] != 0) {
 						continue;
 					}
-					if (size != sets[setIndex][j]) {
+					if (size != sets[setIndex][randomCol]) {
 						continue;
 					}
-					pos[curRow][j] = 1;
-					sets[setIndex][j]--;
-					columns[j]--;
+					pos[curRow][randomCol] = 1;
+					sets[setIndex][randomCol]--;
+					columns[randomCol]--;
 				}
 			}
 
@@ -124,19 +130,23 @@ function Page(props) {
 				if (getRowCount(curRow) === 5) {
 					break;
 				}
+				const cols = [0, 1, 2, 3, 4, 5, 6, 7, 8];
 				for (let j = 0; j < 9; ++j) {
+					let randomIndex = getRandom(0, cols.length);
+					let randomCol = cols[randomIndex];
+					cols.splice(randomIndex, 1);
 					if (getRowCount(curRow) === 5) {
 						break;
 					}
-					if (pos[curRow][j] != 0) {
+					if (pos[curRow][randomCol] != 0) {
 						continue;
 					}
-					if (size != sets[setIndex][j]) {
+					if (size != sets[setIndex][randomCol]) {
 						continue;
 					}
-					pos[curRow][j] = 1;
-					sets[setIndex][j]--;
-					columns[j]--;
+					pos[curRow][randomCol] = 1;
+					sets[setIndex][randomCol]--;
+					columns[randomCol]--;
 				}
 			}
 
@@ -146,24 +156,26 @@ function Page(props) {
 				if (getRowCount(curRow) === 5) {
 					break;
 				}
+				const cols = [0, 1, 2, 3, 4, 5, 6, 7, 8];
 				for (let j = 0; j < 9; ++j) {
+					let randomIndex = getRandom(0, cols.length);
+					let randomCol = cols[randomIndex];
+					cols.splice(randomIndex, 1);
 					if (getRowCount(curRow) === 5) {
 						break;
 					}
-					if (pos[curRow][j] != 0) {
+					if (pos[curRow][randomCol] != 0) {
 						continue;
 					}
-					if (size != sets[setIndex][j]) {
+					if (size != sets[setIndex][randomCol]) {
 						continue;
 					}
-					pos[curRow][j] = 1;
-					sets[setIndex][j]--;
-					columns[j]--;
+					pos[curRow][randomCol] = 1;
+					sets[setIndex][randomCol]--;
+					columns[randomCol]--;
 				}
 			}
 		}
-
-		console.log(pos);
 
 		const rowSum = [];
 		for (let x = 0; x < 18; ++x) {
