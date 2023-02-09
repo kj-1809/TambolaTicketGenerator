@@ -71,7 +71,11 @@ function Page(props) {
 		sets[randomSet][8]++;
 
 		// 3 passes for adding elements in columns
-		for (let times = 0; times < 3; ++times) {
+		for (let times = 0; times < 4; ++times) {
+			let factor = 2;
+			if(times === 3){
+				factor = 3;
+			}
 			for (let j = 0; j < 9; ++j) {
 				if (columns[j] == 0) {
 					continue;
@@ -81,31 +85,13 @@ function Page(props) {
 
 				while (!vacantSeatFound) {
 					let randSet = getRandom(0, 6);
-					if (numberOfElements(randSet) === 15 || sets[randSet][j] === 2) {
+					if (numberOfElements(randSet) === 15 || sets[randSet][j] === factor) {
 						continue;
 					}
 					vacantSeatFound = true;
 					sets[randSet][j]++;
 					columns[j]--;
 				}
-			}
-		}
-		// 1 final pass for 3 elements in a column
-		for (let j = 0; j < 9; ++j) {
-			if (columns[j] == 0) {
-				continue;
-			}
-
-			let vacantSeatFound = false;
-
-			while (!vacantSeatFound) {
-				let randSet = getRandom(0, 6);
-				if (numberOfElements(randSet) === 15 || sets[randSet][j] === 3) {
-					continue;
-				}
-				vacantSeatFound = true;
-				sets[randSet][j]++;
-				columns[j]--;
 			}
 		}
 

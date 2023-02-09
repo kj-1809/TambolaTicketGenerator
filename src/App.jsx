@@ -2,7 +2,7 @@ import Ticket from "./components/Ticket";
 import "./App.css";
 import Page from "./components/Page";
 const App = () => {
-  const n = 1;
+  const n = 10;
   const startPage = 1;
   let arr = []
   
