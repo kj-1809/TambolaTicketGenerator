@@ -5,13 +5,13 @@ import { useState, useEffect } from "react";
 function Page(props) {
 	const [flatListOfNumbers, setFlatListOfNumbers] = useState([]);
 
-	const getRandom = (low, high, exceptions) => {
+	const getRandom = (low, high, exceptions = []) => {
 		// gives result in [low , high)
 		let value = -1;
 		while (value == -1) {
 			const cur = Math.floor(Math.random() * (high - low) + low);
 			let fine = true;
-			if(exceptions){
+			if (exceptions) {
 				exceptions.forEach((element) => {
 					if (cur === element) {
 						fine = false;
@@ -28,138 +28,223 @@ function Page(props) {
 	};
 
 	const randomNumberGenerator = () => {
-		const mxNumsCol = [9, 10, 10, 10, 10, 10, 10, 10, 11];
-		let pos = [];
-		const left = Array(18).fill(5)
-		// generate position where numbers will be placed
+		const columns = [3, 4, 4, 4, 4, 4, 4, 4, 4];
+		const sets = [];
+		const pos = [];
+		const total = [9, 10, 10, 10, 10, 10, 10, 10, 11];
 
-		for(let x = 0 ; x < 18 ; ++x){
-			pos[x] = []
-			for(let y = 0 ; y < 9 ; ++y){
-				pos[x][y] = 0;
+		const numberOfElements = (curSet) => {
+			let count = 0;
+			for (let i = 0; i < 9; ++i) {
+				count += sets[curSet][i];
+			}
+			return count;
+		};
+
+		const getRowCount = (curRow) => {
+			let count = 0;
+			for (let j = 0; j < 9; ++j) {
+				count += pos[curRow][j];
+			}
+			return count;
+		};
+
+		// initialize sets
+		for (let i = 0; i < 6; ++i) {
+			sets[i] = [];
+			// for every set
+			for (let j = 0; j < 9; ++j) {
+				sets[i][j] = 1;
 			}
 		}
 
-		for(let j = 0 ; j < 9 ; ++j){
-			
-			const forbiddenRows = []
-			const mandatoryRows = []
-
-			let startCol = getRandom(0 , 18);
-
-			for(let times = 0 ; times < 3 ; ++times){
-				let curStart = startCol + times;
-				for(let i = 0 ; i < 6 ; i+=3){
-					let curIndex = (curStart + i) % 18;
-					if(left[curIndex] > Number((9-j) * Number(5/9))){
-						mandatoryRows.push([left[curIndex] , curIndex])
-					}
-					if(left[curIndex] === 0){
-						forbiddenRows.push(curIndex)
-					}
-				}
-			}	
-
-			mandatoryRows.sort((a,b) => {
-				return b[0] - a[0]
-			})
-
-			let executed = 0;
-			let alreadySelected = []
-
-			for(let i = 0 ; i < mandatoryRows.length && executed < mxNumsCol[j]; ++i){
-				executed++;
-				alreadySelected.push(mandatoryRows[i][1]);
-				left[mandatoryRows[i][1]]--;
-				pos[mandatoryRows[i][1]][j] = 1
-			}
-
-			const pickedRows = [...forbiddenRows , ...alreadySelected]
-			for(let times = 0 ; times < (mxNumsCol[j] - executed) ; ++times){
-				const pickedRow = getRandom(0,18,pickedRows)
-				if(pickedRow === -1){
-					continue;
-				}
-				if(pickedRow != -1 && left[pickedRow] === 0){
-					executed--;
-					pickedRows.push(pickedRow)
-					continue;
-				}
-				pos[pickedRow][j] = 1;
-				left[pickedRow]--;
-				pickedRows.push(pickedRow)
+		// matrix intialization
+		for (let i = 0; i < 18; ++i) {
+			pos[i] = [];
+			for (let j = 0; j < 9; ++j) {
+				pos[i][j] = 0;
 			}
 		}
 
-		console.log(pos)
+		// random set initialization
+		let randomSet = getRandom(0, 6);
+		sets[randomSet][8]++;
+
+		// 3 passes for adding elements in columns
+		for (let times = 0; times < 3; ++times) {
+			for (let j = 0; j < 9; ++j) {
+				if (columns[j] == 0) {
+					continue;
+				}
+
+				let vacantSeatFound = false;
+
+				while (!vacantSeatFound) {
+					let randSet = getRandom(0, 6);
+					if (numberOfElements(randSet) === 15 || sets[randSet][j] === 2) {
+						continue;
+					}
+					vacantSeatFound = true;
+					sets[randSet][j]++;
+					columns[j]--;
+				}
+			}
+		}
+		// 1 final pass for 3 elements in a column
+		for (let j = 0; j < 9; ++j) {
+			if (columns[j] == 0) {
+				continue;
+			}
+
+			let vacantSeatFound = false;
+
+			while (!vacantSeatFound) {
+				let randSet = getRandom(0, 6);
+				if (numberOfElements(randSet) === 15 || sets[randSet][j] === 3) {
+					continue;
+				}
+				vacantSeatFound = true;
+				sets[randSet][j]++;
+				columns[j]--;
+			}
+		}
+
+		for (let setIndex = 0; setIndex < 6; ++setIndex) {
+			//first row
+			let curRow = setIndex * 3;
+			for (let size = 3; size > 0; --size) {
+				if (getRowCount(curRow) === 5) {
+					break;
+				}
+				for (let j = 0; j < 9; ++j) {
+					if (getRowCount(curRow) === 5) {
+						break;
+					}
+					if (pos[curRow][j] != 0) {
+						continue;
+					}
+					if (size != sets[setIndex][j]) {
+						continue;
+					}
+					pos[curRow][j] = 1;
+					sets[setIndex][j]--;
+					columns[j]--;
+				}
+			}
+
+			// second row
+			curRow++;
+			for (let size = 2; size > 0; --size) {
+				if (getRowCount(curRow) === 5) {
+					break;
+				}
+				for (let j = 0; j < 9; ++j) {
+					if (getRowCount(curRow) === 5) {
+						break;
+					}
+					if (pos[curRow][j] != 0) {
+						continue;
+					}
+					if (size != sets[setIndex][j]) {
+						continue;
+					}
+					pos[curRow][j] = 1;
+					sets[setIndex][j]--;
+					columns[j]--;
+				}
+			}
+
+			// third row
+			curRow++;
+			for (let size = 3; size > 0; --size) {
+				if (getRowCount(curRow) === 5) {
+					break;
+				}
+				for (let j = 0; j < 9; ++j) {
+					if (getRowCount(curRow) === 5) {
+						break;
+					}
+					if (pos[curRow][j] != 0) {
+						continue;
+					}
+					if (size != sets[setIndex][j]) {
+						continue;
+					}
+					pos[curRow][j] = 1;
+					sets[setIndex][j]--;
+					columns[j]--;
+				}
+			}
+		}
+
+		console.log(pos);
 
 		const rowSum = [];
-		for(let x = 0 ; x < 18 ; ++x){
-			let cnt= 0;
-			for(let y = 0 ; y < 9 ; ++y){
-				if(pos[x][y] === 1){
+		for (let x = 0; x < 18; ++x) {
+			let cnt = 0;
+			for (let y = 0; y < 9; ++y) {
+				if (pos[x][y] === 1) {
 					cnt++;
 				}
 			}
 			rowSum[x] = cnt;
 		}
-		const columnSum = []
+		const columnSum = [];
 
-		for(let x = 0 ; x < 9 ; ++x){
+		for (let x = 0; x < 9; ++x) {
 			let cnt = 0;
-			for(let y = 0 ; y < 18 ; ++y){
-				if(pos[y][x] === 1){
+			for (let y = 0; y < 18; ++y) {
+				if (pos[y][x] === 1) {
 					cnt++;
 				}
 			}
 			columnSum[x] = cnt;
 		}
 
-		console.log(left)
-		console.log(rowSum)
-		console.log(columnSum)
+		console.log(rowSum);
+		console.log(columnSum);
 
-		// const ticketNumbers = [];
+		const ticketNumbers = [];
 
 		// pick the numbers
-		// for (let i = 0; i < 9; ++i) {
-		// 	let low = 10 * i;
-		// 	let high = 10 * i + 9;
-		// 	if (i === 0) {
-		// 		low++;
-		// 	}
-		// 	if (i === 8) {
-		// 		high++;
-		// 	}
-		// 	let times = total[i];
-		// 	let pickedNumbers = [];
-		// 	for (let k = 0; k < times; ++k) {
-		// 		pickedNumbers.push(getRandom(low, high + 1, pickedNumbers));
-		// 	}
-		// 	ticketNumbers.push(pickedNumbers);
-		// }
+		for (let i = 0; i < 9; ++i) {
+			let low = 10 * i;
+			let high = 10 * i + 9;
+			if (i === 0) {
+				low++;
+			}
+			if (i === 8) {
+				high++;
+			}
+			let times = total[i];
+			let pickedNumbers = [];
+			for (let k = 0; k < times; ++k) {
+				pickedNumbers.push(getRandom(low, high + 1, pickedNumbers));
+			}
+			ticketNumbers.push(pickedNumbers);
+		}
 
 		// // place numbers at the respective positions
-		// for (let j = 0; j < 9; ++j) {
-		// 	let elements = ticketNumbers[j];
-		// 	let curPos = 0;
-		// 	for (let row = 0; row < 18; ++row) {
-		// 		if (pos[row][j] === 1) {
-		// 			pos[row][j] = elements[curPos];
-		// 			curPos += 1;
-		// 		}
-		// 	}
-		// }
+		for (let j = 0; j < 9; ++j) {
+			let elements = ticketNumbers[j];
+			let curPos = 0;
+			for (let row = 0; row < 18; ++row) {
+				if (pos[row][j] === 1) {
+					pos[row][j] = elements[curPos];
+					curPos += 1;
+				}
+			}
+		}
 
-		// const newPos = [];
-		// let currentPos = 0;
-		// for (let i = 0; i < 18; ++i) {
-		// 	for (let j = 0; j < 9; ++j) {
-		// 		newPos[currentPos] = pos[i][j];
-		// 		currentPos++;
-		// 	}
-		// }
-		// setFlatListOfNumbers(newPos);
+		const newPos = [];
+		let currentPos = 0;
+		for (let i = 0; i < 18; ++i) {
+			for (let j = 0; j < 9; ++j) {
+				newPos[currentPos] = pos[i][j];
+				currentPos++;
+			}
+		}
+		setFlatListOfNumbers(newPos);
 	};
 
 	useEffect(() => {
