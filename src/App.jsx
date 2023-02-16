@@ -2,7 +2,7 @@ import Ticket from "./components/Ticket";
 import "./App.css";
 import Page from "./components/Page";
 const App = () => {
-  const n = 10;
+  const n = 1;
   const startPage = 1;
   let arr = []
   
@@ -20,3 +20,4 @@ const App = () => {
 }
 //heyy
 export default App;
+

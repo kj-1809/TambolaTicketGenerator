@@ -176,32 +176,6 @@ function Page(props) {
 				}
 			}
 		}
-
-		const rowSum = [];
-		for (let x = 0; x < 18; ++x) {
-			let cnt = 0;
-			for (let y = 0; y < 9; ++y) {
-				if (pos[x][y] === 1) {
-					cnt++;
-				}
-			}
-			rowSum[x] = cnt;
-		}
-		const columnSum = [];
-
-		for (let x = 0; x < 9; ++x) {
-			let cnt = 0;
-			for (let y = 0; y < 18; ++y) {
-				if (pos[y][x] === 1) {
-					cnt++;
-				}
-			}
-			columnSum[x] = cnt;
-		}
-
-		console.log(rowSum);
-		console.log(columnSum);
-
 		const ticketNumbers = [];
 
 		// pick the numbers
