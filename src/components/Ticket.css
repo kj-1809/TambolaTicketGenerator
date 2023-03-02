@@ -1,4 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=Bangers&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Bangers&family=Luckiest+Guy&display=swap');
 .ticketContainer {
   display: flex;
   align-items: center;
@@ -14,19 +15,22 @@
 .headingContainer  {
   display: flex;
   flex-direction: row;
-
 }
 .ticketHeading {
-  font-family: 'Bangers', cursive;
+  /* font-family: 'Bangers', cursive; */
+  font-family: 'Luckiest Guy', cursive;
   font-size: 25px;
   margin : 0;
+  margin-top: 10px;
   padding : 4px 0px;
 }
 .ticketCode {
-  font-family: 'Bangers', cursive;
+  /* font-family: 'Bangers', cursive; */
+  font-family: 'Luckiest Guy', cursive;
   padding : 4px 0px;
   font-size: 25px;
   margin : 0px 0px 0px 30px;
+  margin-top: 10px;
 }
 
 hr {

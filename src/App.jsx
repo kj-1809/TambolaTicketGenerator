@@ -4,7 +4,7 @@ import Page from "./components/Page";
 import structures from "./structures";
 
 const App = () => {
-	const n = 1000;
+	const n = 1;
 	const startPage = 1;
 	let arr = [];
 
