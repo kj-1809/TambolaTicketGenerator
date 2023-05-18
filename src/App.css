@@ -6,11 +6,6 @@
   flex-direction: column;
 }
 
-body{
-  padding: 0px;
-}
-
-
 .inputContainer {
   display: flex;
   flex-direction: column;
