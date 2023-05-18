@@ -1,6 +1,66 @@
+@import url('https://fonts.googleapis.com/css2?family=Bangers&family=Luckiest+Guy&display=swap');
 .container {
   display: flex;
   justify-content: center;
   align-items: center;
   flex-direction: column;
+}
+
+body{
+  padding: 0px;
+}
+
+
+.inputContainer {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.singleInputContainer {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+input {
+  margin-left : 1rem;
+  border:  1px solid yellowgreen;
+  font-family: 'Bangers', cursive;
+}
+
+button {
+  margin-top : 40px;
+  padding : 6px 12px;
+  border-radius: 5px;
+  border : 2px solid yellowgreen;
+  background-color: white;
+}
+
+button:hover {
+  background-color: rgb(194, 209, 165) ;
+}
+
+h4 {
+  font-family: 'Bangers', cursive;
+  font-size: 20px;
+}
+
+.sheetInput {
+  height : 25px;
+  border-radius: 10px;
+  padding: 4px;
+  width : 60px;
+  text-align: center;
+  font-size: larger;
+}
+
+.pageInput {
+  height : 25px;
+  border-radius: 10px;
+  padding: 4px;
+  width: 60px;
+  text-align: center;
+  font-size: larger;
 }

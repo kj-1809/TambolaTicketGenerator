@@ -30,6 +30,7 @@ function Page(props) {
 		const total = [9, 10, 10, 10, 10, 10, 10, 10, 11];
 		const ticketNumbers = [];
 		const pos = JSON.parse(JSON.stringify(props.structure));
+		// const pos = structuredClone(props.structure)
 
 		// pick the numbers
 		for (let j = 0; j < 9; ++j) {
